@@ -10,24 +10,16 @@ If you haven't already done this, create a new Aiven trial at the [signup page](
 
 ![Signup](img/1%20-%20signup.png)
 
-Create your trial video
+Here's how easy it is to get started with a trial in Aiven.
+![create trial](video/0%20-%20create%20your%20trial.mp4)
 
 Done? Awesome, let's start creating the databases we are going to need. 
 
 ## Create Postgres
 
-<!-- The script tag should live in the head of your page if at all possible -->
-<script type="text/javascript" async src="https://play.vidyard.com/embed/v4.js"></script>
+Click on the `create service` button to get started with your new Postgres service. 
 
-<!-- Put this wherever you would like your player to appear -->
-<img
-  style="width: 100%; margin: auto; display: block;"
-  class="vidyard-player-embed"
-  src="https://play.vidyard.com/xU6KedxcW9epcFfGKoHrPk.jpg"
-  data-uuid="xU6KedxcW9epcFfGKoHrPk"
-  data-v="4"
-  data-type="inline"
-/>
+![create postgres](video/1%20-%20create%20postgres.mp4)
 
 
 ## Create Kafka
