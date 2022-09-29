@@ -53,6 +53,14 @@ Let's move to the next step.
 ## Create Kafka
 
 
+Click on the `create service` button to get started with your new Kafka service. 
+
+https://user-images.githubusercontent.com/92002375/192944203-83e29756-90c1-481e-beba-13a2fe876f82.mp4
+
+
+
+
+
 ## Create Kafka Connect 
 
 
