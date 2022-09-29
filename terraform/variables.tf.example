@@ -1,0 +1,4 @@
+variable "aiven_api_token" {default = "https://docs.aiven.io/docs/platform/howto/create_authentication_token.html"}
+variable "cloud_name" {default = "google-asia-southeast1"}
+variable "project_name" {default = "tsellers-demo"}
+variable "pg-service-name" {default = "postgres-db"}

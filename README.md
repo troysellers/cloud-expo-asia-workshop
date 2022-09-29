@@ -8,10 +8,12 @@ Welcome to Aiven :)
 ## Create your Aiven Account
 If you haven't already done this, create a new Aiven trial at the [signup page](https://console.aiven.io/signup). You may notice some QR codes nearby, you could scan these and get to a trial with even a few more credits! 
 
+
 ![Signup](img/1%20-%20signup.png)
 
 Here's how easy it is to get started with a trial in Aiven.
-![create trial](video/0%20-%20create%20your%20trial.mp4)
+
+https://user-images.githubusercontent.com/768991/192938791-98effa95-d40f-4c32-b0a1-82752131f6f9.mp4
 
 Done? Awesome, let's start creating the databases we are going to need. 
 
@@ -19,8 +21,34 @@ Done? Awesome, let's start creating the databases we are going to need.
 
 Click on the `create service` button to get started with your new Postgres service. 
 
-![create postgres](video/1%20-%20create%20postgres.mp4)
+https://user-images.githubusercontent.com/768991/192938883-949af89b-a75d-44e3-8b80-7228aaaace53.mp4
 
+
+Once your postgres service is up and running, it's time to load some data into it. 
+
+We are going to simulate a table, so let's create one using psql from our local machine. 
+If you don't have a local tool installed for running postgres scripts, you can look at something like [Retool](https://retool.com/)
+
+Get your credentials from the Postgres service in Aiven 
+
+![pg creds](img/2%20-%20pgcreds.png)
+
+Then from the sql directory in this repository 
+```console
+$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb -f create.sql
+```
+
+> Be sure to remove the ?sslmode parameter when using the psql from local machine
+
+Now, let's load some data 
+
+```console
+$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb -f insert.sql
+```
+
+Excellent, we know have our postgres database loaded with data. 
+
+Let's move to the next step.
 
 ## Create Kafka
 
