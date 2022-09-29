@@ -8,10 +8,12 @@ Welcome to Aiven :)
 ## Create your Aiven Account
 If you haven't already done this, create a new Aiven trial at the [signup page](https://console.aiven.io/signup). You may notice some QR codes nearby, you could scan these and get to a trial with even a few more credits! 
 
+
 ![Signup](img/1%20-%20signup.png)
 
 Here's how easy it is to get started with a trial in Aiven.
-![create trial](video/0%20-%20create%20your%20trial.mp4)
+
+https://user-images.githubusercontent.com/768991/192938791-98effa95-d40f-4c32-b0a1-82752131f6f9.mp4
 
 Done? Awesome, let's start creating the databases we are going to need. 
 
@@ -19,7 +21,8 @@ Done? Awesome, let's start creating the databases we are going to need.
 
 Click on the `create service` button to get started with your new Postgres service. 
 
-![create postgres](video/1%20-%20create%20postgres.mp4)
+https://user-images.githubusercontent.com/768991/192938883-949af89b-a75d-44e3-8b80-7228aaaace53.mp4
+
 
 
 ## Create Kafka
