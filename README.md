@@ -38,6 +38,14 @@ https://user-images.githubusercontent.com/92002375/192944203-83e29756-90c1-481e-
 
 ## Create Kafka Connect 
 
+Go to your Kafka service overview page, `manage integrations`, and select `Kafka Connect` to get started! 
+
+
+
+
+https://user-images.githubusercontent.com/92002375/193548233-7d6f6797-ab78-4e71-9037-65f00d50ae3f.mp4
+
+
 
 ## Add Debezium
 
