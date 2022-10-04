@@ -49,8 +49,8 @@ https://user-images.githubusercontent.com/92002375/193753962-7124b560-8cf6-4173-
 Steps: 
 1. Go to Kafka service overview page > `manage integrations` > `Kafka connect` 
 2. Paste the sample code below into the connector JSON: 
-   ```
-   
+```
+{
     "name":"$KAFKA_CONNECTOR_NAME",
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
     "database.hostname": "$PG_HOST",
@@ -72,6 +72,7 @@ Steps:
     "transforms.transform-1.replacement":"$KAFKA_TOPIC_NAME"
 }
 ```
+
 3. Modify the JSON file with configuration information from your `PostgreSQL service`.
 4. Go to your `Kafka service` > Advanced configuration > Enable auto.create.topics 
 
