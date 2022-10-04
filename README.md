@@ -74,7 +74,7 @@ Steps:
 ```
 
 3. Modify the JSON file with configuration information from your `PostgreSQL service`.
-4. Go to your `Kafka service` > Advanced configuration > Enable auto.create.topics 
+4. Go to your `Kafka service` > Advanced Configurations > Enable `auto.create.topics` 
 
 ## Send Data From PostgreSQL to Kafka 
 
