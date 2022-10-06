@@ -58,18 +58,14 @@ Steps:
     "database.user": "$PG_USER",
     "database.password": "$PG_PASSWORD",
     "database.dbname": "$PG_DATABASE_NAME",
-    "database.sslmode": "$PG_SSL_MODE",
+    "database.sslmode": "require",
     "plugin.name": "pgoutput",
     "slot.name": "debezium",
-    "publication.name": "debezium",
+    "publication.name": "$PUBLICATION_NAME",
     "database.server.name": "$PROJECT_NAME$PG_SERVICE_NAME",
     "tasks.max":"1",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "transforms": "transform-1",
-    "transforms.transform-1.type": "org.apache.kafka.connect.transforms.RegexRouter",
-    "transforms.transform-1.regex":"(.*)$KAFKA_TOPIC_NAME",
-    "transforms.transform-1.replacement":"$KAFKA_TOPIC_NAME"
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter"
 }
 ```
 
