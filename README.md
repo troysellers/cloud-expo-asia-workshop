@@ -111,7 +111,15 @@ With that, you are done with your PostgreSQL and Kafka setup! Next, let's explor
 ## Create Clickhouse
 
 
+https://user-images.githubusercontent.com/92002375/194501434-6a2f743a-37cf-4502-81d3-a00e1574c336.mp4
+
+
+
 ## Configure Kafka -> Clickhouse
+
+
+https://user-images.githubusercontent.com/92002375/194501462-c12ae651-120f-4fc2-8c8f-e664c9ee1f75.mp4
+
 
 
 ## Consume The Data Stream
@@ -127,4 +135,17 @@ OR
 ## Adding an Observability Stack
 
 
+# Create Observability Stack
+https://user-images.githubusercontent.com/92002375/194501746-d95575d4-acf2-48b1-949b-c8d85563509b.mp4
+The Aiven platform comes with the capability of spinning up observability pipelines with a few clicks of a button. Follow the video and try it out!
+
+# View Observability Stack
+
+
+https://user-images.githubusercontent.com/92002375/194501920-89e54eb0-09df-4056-aa90-9e47166ea1eb.mp4
+Spinning up an observability stack comes with pre-populated panels that you can use immediately to monitor your services. 
+
+
 ## Build This Again Using Terraform
+
+You can also interface with Aiven's platform through Infrastructure-As-Code such as [Terraform](https://registry.terraform.io/providers/aiven/aiven/latest/docs) or [Kubernetes](https://docs.aiven.io/docs/tools/kubernetes.html). You can access the sample Terraform scripts that we have provided and give it a go!
