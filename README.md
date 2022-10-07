@@ -137,6 +137,7 @@ OR
 
 # Create Observability Stack
 https://user-images.githubusercontent.com/92002375/194501746-d95575d4-acf2-48b1-949b-c8d85563509b.mp4
+
 The Aiven platform comes with the capability of spinning up observability pipelines with a few clicks of a button. Follow the video and try it out!
 
 # View Observability Stack
