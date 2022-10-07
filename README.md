@@ -143,6 +143,7 @@ The Aiven platform comes with the capability of spinning up observability pipeli
 
 
 https://user-images.githubusercontent.com/92002375/194501920-89e54eb0-09df-4056-aa90-9e47166ea1eb.mp4
+
 Spinning up an observability stack comes with pre-populated panels that you can use immediately to monitor your services. 
 
 
