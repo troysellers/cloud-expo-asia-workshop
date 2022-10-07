@@ -32,6 +32,13 @@ Click on the `create service` button to get started with your new Kafka service.
 
 https://user-images.githubusercontent.com/92002375/192944203-83e29756-90c1-481e-beba-13a2fe876f82.mp4
 
+After creating the Kafka service, go to the `service overview` page and enable `Apache Kafka REST API (Karapace)`. 
+
+Next, scroll down to `Advanced Configurations` and add in `kafka.auto_create_topics_enable`. Turn the configuration on and save advanced configuration. 
+
+<img width="1434" alt="Screenshot 2022-10-07 at 1 24 52 PM" src="https://user-images.githubusercontent.com/92002375/194474892-968aa681-e2f4-4c5f-bae3-24ae106a7aa9.png">
+
+
 
 ## Create Kafka Connect 
 
@@ -46,9 +53,25 @@ https://user-images.githubusercontent.com/92002375/193548233-7d6f6797-ab78-4e71-
 
 https://user-images.githubusercontent.com/92002375/193753962-7124b560-8cf6-4173-8afa-a49586a82434.mp4
 
-Steps: 
-1. Go to Kafka service overview page > `manage integrations` > `Kafka connect` 
-2. Paste the sample code below into the connector JSON: 
+Go to Kafka service overview page > `manage integrations` > `Kafka connect`
+
+You will need to install the aiven-extras extenstion and create a publication for all the tables. 
+
+Use the `psql <POSTGRESQL_URI>` command to enter your database. 
+Run 
+```CREATE EXTENSION aiven_extras CASCADE;```
+to create the extension, and 
+```
+SELECT *
+FROM aiven_extras.pg_create_publication_for_all_tables(
+    'debezium_publication',
+    'INSERT,UPDATE,DELETE'
+    ); 
+```
+to create the publication. 
+
+
+Next, go to the connector type under Kafka Connect and paste the sample code below into the connector JSON: 
 ```
 {
     "name":"$KAFKA_CONNECTOR_NAME",
@@ -61,18 +84,25 @@ Steps:
     "database.sslmode": "require",
     "plugin.name": "pgoutput",
     "slot.name": "debezium",
-    "publication.name": "$PUBLICATION_NAME",
+    "publication.name": "debezium_publication",
     "database.server.name": "$PROJECT_NAME$PG_SERVICE_NAME",
     "tasks.max":"1",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter"
 }
 ```
-
-3. Modify the JSON file with configuration information from your `PostgreSQL service`.
-4. Go to your `Kafka service` > Advanced Configurations > Enable `auto.create.topics` 
+Modify the JSON file with connection information from your `PostgreSQL service`. You can get your connection information by going to your PostgreSQL service overview tab.
 
 ## Send Data From PostgreSQL to Kafka 
+
+
+https://user-images.githubusercontent.com/92002375/194475453-39cefaf3-2b25-4546-bdbe-c1f6f3f281ab.mp4
+
+Connect into your database and run the following insert statement: `INSERT INTO public.orders(first_name, last_name, email, gender, street, town, mobile, country, drink_type, cost, addons, comments) values ('Misty','Ketchum','ashketchum@champion.com','Male','26 Pallet Town','Ketchum Estate','+65 819 910 48618','Singapore','Latte',5.7,'sugar','cold water');` 
+
+Go to your Kafka topic, messages and select fetch messages. Decode the message and observe that the data that you inserted to PostgreSQL shows up on Kafka. 
+
+With that, you are done with your PostgreSQL and Kafka setup! Next, let's explore how to create a `Clickhouse` service. 
 
 
 ## Create Clickhouse
