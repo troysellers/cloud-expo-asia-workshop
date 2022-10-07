@@ -2,3 +2,26 @@ variable "aiven_api_token" {default = "aazWceUebE57LvDaTrUH7bC8JeYMZKA/qj1NbSYeP
 variable "cloud_name" {default = "google-asia-southeast1"}
 variable "project_name" {default = "tsellers-demo"}
 variable "pg-service-name" {default = "postgres-db"}
+
+
+
+variable aiven_api_token {
+	type = string
+}
+
+variable aiven_project_name {
+	type = string
+}
+
+variable service_prefix {
+	type = string
+}
+
+variable aiven_plan {
+	type = string
+}
+
+variable aiven_cloud {
+	type = string
+	default = "google-asia-southeast1"
+}
