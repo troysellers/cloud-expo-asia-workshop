@@ -71,7 +71,12 @@ FROM aiven_extras.pg_create_publication_for_all_tables(
 Now, let's load some data 
 
 ```console
-$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb -f insert.sql
+$> psql <SERVICE_URI_FROM_CONSOLE> -f sql/create.sql
+psql:sql/create.sql:1: NOTICE:  table "orders" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+
+$> psql <SERVICE_URI_FROM_CONSOLE> -f sql/insert.sql
 ```
 
 Excellent, we know have our postgres database loaded with data. 
@@ -177,7 +182,50 @@ https://user-images.githubusercontent.com/92002375/194501462-c12ae651-120f-4fc2-
 
 ## Consume The Data Stream
 
-So our last step is now to setup some tables in Clickhouse so the data in the Kafka topic is getting consumed, something like this is our end step.
+So our last step is now to setup some tables in Clickhouse so the data in the Kafka topic is getting consumed. From the drawing at the start of our session you will see there are two Clickhouse tables we need to create, as well as a Clickhouse Materialised View. The reason we do this is because once you read data from the Kafka topic in Clickhouse, you advance the Consumer offset and so it is effectively a "query once only" behaviour in Clickhouse. So, we use that query to load data into a different table that allows user queries for analytics. 
+
+You will find the topic name in your Kafka configuration, under the topics tab. 
+
+> Clickhouse is still in beta so the only way for us to operate with the Clickhouse - Kafka integration today is via the AVN CLI client.
+
+Firstly, lets make sure we know the name of the topic that has been created in Kafka as a result of the Kafka Connect configuration. We require this so we can tell Clickhouse what topic to read the data from. 
+
+```console
+$> avn service integration-list cloud-expo-clickhouse
+```
+
+Now we can take that integration id and insert into this command. 
+
+```console
+avn service integration-update <SERVICE_INTEGRATION_ID> \
+    --project <YOUR PROJECT NAME> \
+    --user-config-json '{
+    "tables": [
+        {
+            "name": "orders_queue",
+            "columns": [
+                {"name": "id" , "type": "String"},
+                {"name": "first_name" , "type": "String"},
+                {"name": "last_name" , "type": "String"},
+                {"name": "email" , "type": "String"},
+                {"name": "gender" , "type": "String"},
+                {"name": "street" , "type": "String"},
+                {"name": "town" , "type": "String"},
+                {"name": "mobile" , "type": "String"},
+                {"name": "country" , "type": "String"},
+                {"name": "drink_type" , "type": "String"},
+                {"name": "cost" , "type": "Float32"},
+                {"name": "addons" , "type": "String"},
+                {"name": "comments" , "type": "String"}
+            ],
+            "topics": [{"name": "<YOUR KAFKA TOPIC>"}],
+            "data_format": "JSONEachRow",
+            "group_name": " order_consumer"
+        }
+    ]
+}'
+```
+
 
 # Bonus Marks!! 
 Did you make it to the end already? Still have time left in our workshop? Well done, I told you Aiven was simple and easy to use didn't I! :) 
