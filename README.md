@@ -27,14 +27,15 @@ Click on the `create service` button to get started with your new Postgres servi
 https://user-images.githubusercontent.com/768991/192938883-949af89b-a75d-44e3-8b80-7228aaaace53.mp4
 
 
-Once your postgres service is up and running, it's time to load some data into it. 
+Once your postgres service is up and running, we need to connect and configure the database for the following sections.
 
-We are going to simulate a table, so let's create one using psql from our local machine. 
 If you don't have a local tool installed for running postgres scripts, you can look at something like [Retool](https://retool.com/)
 
 Get your credentials from the Postgres service in Aiven 
 
 ![pg creds](img/2%20-%20pgcreds.png)
+
+Note your connection string. 
 
 Then from the sql directory in this repository 
 ```console
@@ -42,6 +43,30 @@ $ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:1
 ```
 
 > Be sure to remove the ?sslmode parameter when using the psql from local machine
+
+
+### Setup for the CDC configuration
+The Aiven Postgres service will require some [setup in the database](https://docs.aiven.io/docs/products/kafka/kafka-connect/howto/debezium-source-connector-pg.html) we have just created.
+
+You will need to install the aiven-extras extenstion and create a publication for all the tables.
+
+First, connect to your postgres service
+```console
+$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb 
+```
+
+Then, create the [aiven_extras](https://github.com/aiven/aiven-extras) postgres database extension
+```sql
+CREATE EXTENSION aiven_extras CASCADE; 
+
+SELECT *
+FROM aiven_extras.pg_create_publication_for_all_tables(
+    'debezium_publication',
+    'INSERT,UPDATE,DELETE'
+    ); 
+```
+
+### Add some data
 
 Now, let's load some data 
 

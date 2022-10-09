@@ -39,6 +39,32 @@ resource "aiven_kafka" "kafka-service" {
   }
 }
 
+resource "aiven_kafka_connect" "kafka-connect-service" {
+  project = var.aiven_project_name
+  cloud_name = var.aiven_cloud
+  plan = var.aiven_plan
+  service_name = "${var.service_prefix}kafka-connect"
+  maintenance_window_dow = "sunday"
+  maintenance_window_time = "10:00:00"
+  depends_on = [aiven_kafka.kafka-service]
+  kafka_connect_user_config {
+    kafka_connect {
+      consumer_isolation_level = "read_committed"
+    }
+
+    public_access {
+      kafka_connect = true
+    }
+  }
+}
+
+resource "aiven_service_integration" "kafka-connect-integration" {
+  project = var.aiven_project_name
+  integration_type = "kafka_connect"
+  source_service_name = aiven_kafka.kafka-service.service_name
+  destination_service_name = aiven_kafka_connect.kafka-connect-service.service_name
+  depends_on = [aiven_kafka_connect.kafka-connect-service, aiven_kafka.kafka-service]
+}
 
 # Debezium Source Connector
 resource "aiven_kafka_connector" "kafka-pg-source-conn" {
