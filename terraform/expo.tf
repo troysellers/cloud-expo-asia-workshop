@@ -69,9 +69,9 @@ resource "aiven_service_integration" "kafka-connect-integration" {
 # Debezium Source Connector
 resource "aiven_kafka_connector" "kafka-pg-source-conn" {
   project        = var.aiven_project_name
-  service_name   = aiven_kafka.kafka-service.service_name
+  service_name   = aiven_kafka_connect.kafka-connect-service.service_name
   connector_name = "kafka-pg-source-conn"
-
+ depends_on = [aiven_service_integration.kafka-connect-integration]
   config = {
     "name"                     = "kafka-pg-source-conn",
     "connector.class"          = "io.debezium.connector.postgresql.PostgresConnector",

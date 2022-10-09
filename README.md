@@ -37,23 +37,18 @@ Get your credentials from the Postgres service in Aiven
 
 Note your connection string. 
 
-Then from the sql directory in this repository 
-```console
-$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb -f create.sql
-```
 
-> Be sure to remove the ?sslmode parameter when using the psql from local machine
-
-
-### Setup for the CDC configuration
+### Setup The CDC Configuration
 The Aiven Postgres service will require some [setup in the database](https://docs.aiven.io/docs/products/kafka/kafka-connect/howto/debezium-source-connector-pg.html) we have just created.
 
 You will need to install the aiven-extras extenstion and create a publication for all the tables.
 
 First, connect to your postgres service
 ```console
-$ psql postgres://avnadmin:<password>@postgres-db-tsellers-demo.aivencloud.com:18943/defaultdb 
+$ psql <YOUR SERVICE URI>
 ```
+
+> Be sure to remove the ?sslmode parameter when using the psql from local machine
 
 Then, create the [aiven_extras](https://github.com/aiven/aiven-extras) postgres database extension
 ```sql
@@ -66,7 +61,7 @@ FROM aiven_extras.pg_create_publication_for_all_tables(
     ); 
 ```
 
-### Add some data
+### Adding Data
 
 Now, let's load some data 
 
@@ -113,24 +108,10 @@ https://user-images.githubusercontent.com/92002375/193753962-7124b560-8cf6-4173-
 
 Go to Kafka service overview page > `manage integrations` > `Kafka connect`
 
-You will need to install the aiven-extras extenstion and create a publication for all the tables. 
+Once your Kafka Connect service has completed building you then can create the Debezium - PostgreSQL Source connection. 
+Click `New Connection` button and then add the following connection JSON. 
 
-Use the `psql <POSTGRESQL_URI>` command to enter your database. 
-Run 
-```CREATE EXTENSION aiven_extras CASCADE;```
-to create the extension, and 
-```
-SELECT *
-FROM aiven_extras.pg_create_publication_for_all_tables(
-    'debezium_publication',
-    'INSERT,UPDATE,DELETE'
-    ); 
-```
-to create the publication. 
-
-
-Next, go to the connector type under Kafka Connect and paste the sample code below into the connector JSON: 
-```
+```json
 {
     "name":"$KAFKA_CONNECTOR_NAME",
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
