@@ -5,3 +5,4 @@ terraform/variables.tf
 *.go
 *.csv
 terraform/*.backup
+video/

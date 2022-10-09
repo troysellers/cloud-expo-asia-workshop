@@ -4,6 +4,9 @@ terraform {
       source  = "aiven/aiven"
       version = ">= 3.1"
     }
+    postgresql = {
+      source = "cyrilgdn/postgresql"
+    }
   }
 }
 
