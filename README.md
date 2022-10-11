@@ -148,7 +148,7 @@ https://user-images.githubusercontent.com/92002375/194475453-39cefaf3-2b25-4546-
 
 Connect into your database and run the following insert statement: 
 ```
-INSERT INTO public.orders(first_name, last_name, email, gender, street, town, mobile, country, drink_type, cost, addons, comments) values ('Misty','Ketchum','ashketchum@champion.com','Male','26 Pallet Town','Ketchum Estate','+65 819 910 48618','Singapore','Latte',5.7,'sugar','cold water');
+INSERT INTO public.orders(first_name, last_name, email, gender, street, town, mobile, country, drink_type, cost, addons, comments) values ('Ash','Ketchum','ashketchum@champion.com','Male','26 Pallet Town','Ketchum Estate','+65 819 910 48618','Singapore','Latte',5.7,'sugar','cold water');
 ```
 
 Go to your Kafka topic, messages and select fetch messages. Decode the message and observe that the data that you inserted to PostgreSQL shows up on Kafka. 
