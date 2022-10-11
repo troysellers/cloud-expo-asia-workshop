@@ -176,7 +176,7 @@ So our last step is now to setup some tables in Clickhouse so the data in the Ka
 
 You will find the topic name in your Kafka configuration, under the topics tab. 
 
-> Clickhouse is still in beta so the only way for us to operate with the Clickhouse - Kafka integration today is via the AVN CLI client.
+> Clickhouse is still in beta so the only way for us to operate with the Clickhouse - Kafka integration today is via the AVN CLI client. You can install the AVN CLI from the instructions [here](https://github.com/aiven/aiven-client). 
 
 Firstly, lets make sure we know the name of the topic that has been created in Kafka as a result of the Kafka Connect configuration. We require this so we can tell Clickhouse what topic to read the data from. 
 
