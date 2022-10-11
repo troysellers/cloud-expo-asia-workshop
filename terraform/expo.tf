@@ -100,26 +100,28 @@ resource "aiven_kafka_connector" "kafka-pg-source-conn" {
   connector_name = "kafka-pg-source-conn"
  depends_on = [aiven_service_integration.kafka-connect-integration]
   config = {
-    "name"                     = "kafka-pg-source-conn",
-    "connector.class"          = "io.debezium.connector.postgresql.PostgresConnector",
-    "tasks.max"                = "1",
+    "name" = "kafka-pg-source-conn",
+    "connector.class" = "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max" = "1",
     "database.server.name"     = aiven_pg.postgres-service.service_name,
     "database.hostname"        = aiven_pg.postgres-service.service_host,
     "database.port"            = aiven_pg.postgres-service.service_port,
     "database.user"            = aiven_pg.postgres-service.service_username,
     "database.password"        = aiven_pg.postgres-service.service_password,
-    "database.dbname"          = "defaultdb",
-    "plugin.name"              = "pgoutput",
-    "database.sslmode"         = "require",
-    "publication.name"         = "debezium_publication"
-    "slot.name"                = "debezium",
-    "key.converter"            = "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter"          = "org.apache.kafka.connect.json.JsonConverter",
-    "key.converter.schemas.enable"  = "false",
+    "database.dbname" = "defaultdb",
+    "database.sslmode" = "require",
+    "plugin.name" = "pgoutput",
+    "include.schema.changes" = "false",
+    "key.converter" = "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter" = "org.apache.kafka.connect.json.JsonConverter",
+    "slot.name" = "debezium",
+    "publication.name" = "debezium_publication",
+    "decimal.handling.mode" = "string",
+    "key.converter.schemas.enable" = "false",
     "value.converter.schemas.enable" = "false",
-    "transforms"               = "flatten",
-    "transforms.flatten.type"  = "org.apache.kafka.connect.transforms.Flatten$Value",
-    "transforms.flatten.delimiter" = "."
+    "include.schema.changes" = "false",
+    "transforms" = "extractState",
+    "transforms.extractState.type" = "io.debezium.transforms.ExtractNewRecordState"
   }
 }
 

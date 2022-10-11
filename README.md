@@ -45,7 +45,7 @@ You will need to install the aiven-extras extenstion and create a publication fo
 
 First, connect to your postgres service
 ```console
-$ psql <YOUR SERVICE URI>
+$ psql <YOUR CONNECTION STRING>
 ```
 
 > Be sure to remove the ?sslmode parameter when using the psql from local machine
@@ -63,7 +63,7 @@ FROM aiven_extras.pg_create_publication_for_all_tables(
 
 ### Adding Data
 
-Now, let's load some data 
+Now, let's create our data table and load some data.
 
 ```console
 $> psql <SERVICE_URI_FROM_CONSOLE> -f sql/create.sql
@@ -114,41 +114,37 @@ Click `New Connection` button and then add the following connection JSON.
 ```json
 {
     "name": "kafka-pg-source-conn",
-    "database.server.name": "cloud-expo-service-pg",
-    "transforms": "extract,flatten,tombstones",
+    "transforms": "extractState",
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-    "database.hostname": "cloud-expo-service-pg-tsellers-demo.aivencloud.com",
     "tasks.max": "1",
-    "database.port": "18943",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "database.user": "avnadmin",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "database.password": "AVNS_CG2Tsi0QxBaF3KSaksI",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "database.server.name": "cloud-expo-service-pg",
+    "database.hostname": "<YOUR PG HOST>",
+    "database.port": "<YOUR PG PORT>",
     "database.dbname": "defaultdb",
+    "database.user": "avnadmin",
+    "database.password": "<YOUR PG PASS>",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "plugin.name": "pgoutput",
     "slot.name": "debezium",
     "publication.name": "debezium_publication",
     "decimal.handling.mode": "string",
     "database.sslmode": "require",
-    "transforms.extract.type": "io.debezium.transforms.ExtractNewRecordState",
-    "transforms.flatten.delimiter": ".",
-    "transforms.flatten.type": "org.apache.kafka.connect.transforms.Flatten$Value",
-    "transforms.tombstones.behavior": "drop_warn",
-    "transforms.tombstones.type": "io.aiven.kafka.connect.transforms.TombstoneHandler",
-    "key.converter.schemas.enabled": "true",
-    "value.converter.schemas.enabled": "true"
+    "include.schema.changes": "false",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "transforms.extractState.type": "io.debezium.transforms.ExtractNewRecordState"
 }
 ```
 Modify the JSON file with connection information from your `PostgreSQL service`. You can get your connection information by going to your PostgreSQL service overview tab.
 
 ## Send Data From PostgreSQL to Kafka 
 
-
 https://user-images.githubusercontent.com/92002375/194475453-39cefaf3-2b25-4546-bdbe-c1f6f3f281ab.mp4
 
-Connect into your database and run the following insert statement: 
-```
-INSERT INTO public.orders(first_name, last_name, email, gender, street, town, mobile, country, drink_type, cost, addons, comments) values ('Misty','Ketchum','ashketchum@champion.com','Male','26 Pallet Town','Ketchum Estate','+65 819 910 48618','Singapore','Latte',5.7,'sugar','cold water');
+Time to load a whole load of orders into your database. You can run this as many times as you want ! 
+```console
+psql <YOUR PG CONNECTION STRING> -f sql/insert.sql
 ```
 
 Go to your Kafka topic, messages and select fetch messages. Decode the message and observe that the data that you inserted to PostgreSQL shows up on Kafka. 
@@ -193,30 +189,30 @@ Now we can take that integration id and insert into this command.
 Be sure to update the `topics` element and the end of this command with the topic from your service if you have modified any of the default settings.
 
 ```console
-avn service integration-update d6b958e5-1c0d-4463-8aef-250a70050082  \
-    --project tsellers-demo \
+avn service integration-update <YOUR CLICKHOUSE INTEGRATION ID>  \
+    --project <YOUR AIVEN PROJECT> \
     --user-config-json '{
     "tables": [
         {
-            "name": "orders_queue2",
+            "name": "orders_queue",
             "columns": [
-                {"name": "payload.id" , "type": "Int64"},
-                {"name": "payload.first_name" , "type": "String"},
-                {"name": "payload.last_name" , "type": "String"},
-                {"name": "payload.email" , "type": "String"},
-                {"name": "payload.gender" , "type": "String"},
-                {"name": "payload.street" , "type": "String"},
-                {"name": "payload..town" , "type": "String"},
-                {"name": "payload.mobile" , "type": "String"},
-                {"name": "payload.country" , "type": "String"},
-                {"name": "payload.drink_type" , "type": "String"},
-                {"name": "payload.cost" , "type": "Float64"},
-                {"name": "payload.addons" , "type": "String"},
-                {"name": "payload.comments" , "type": "String"}
+                {"name": "id" , "type": "Int64"},
+                {"name": "first_name" , "type": "String"},
+                {"name": "last_name" , "type": "String"},
+                {"name": "email" , "type": "String"},
+                {"name": "gender" , "type": "String"},
+                {"name": "street" , "type": "String"},
+                {"name": "town" , "type": "String"},
+                {"name": "mobile" , "type": "String"},
+                {"name": "country" , "type": "String"},
+                {"name": "drink_type" , "type": "String"},
+                {"name": "cost" , "type": "String"},
+                {"name": "addons" , "type": "String"},
+                {"name": "comments" , "type": "String"}
             ],
             "topics": [{"name": "cloud-expo-service-pg.public.orders"}],
             "data_format": "JSONEachRow",
-            "group_name": " order_consumer2"
+            "group_name": " order_consumer"
         }
     ]
 }'
@@ -249,9 +245,17 @@ CREATE TABLE default.orders
 Create the Materialised View
 ```sql
 CREATE MATERIALIZED VIEW default.orders_mv TO default.orders AS 
-SELECT *
+SELECT id, first_name, last_name, email, gender, 
+            street, town,  mobile, country, drink_type, 
+            toFloat64OrZero(cost) as cost, addons, comments
 FROM `service_cloud-expo-service-kafka`.orders_queue;
 ```
+
+Now, you should be able to determine the most popular drink in Singapore!! 
+```sql
+select count(*) c, drink_type from default.orders group by drink_type order by c desc;
+```
+
 
 # Bonus Marks!! 
 Did you make it to the end already? Still have time left in our workshop? Well done, I told you Aiven was simple and easy to use didn't I! :) 

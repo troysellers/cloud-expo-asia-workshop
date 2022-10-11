@@ -1,6 +1,6 @@
 CREATE TABLE default.orders
 (
-    id String,
+    id Int64,
     first_name String,
     last_name String,
     email String,
@@ -16,7 +16,7 @@ CREATE TABLE default.orders
 ) ENGINE = MergeTree ORDER BY (id);
 
 CREATE MATERIALIZED VIEW default.orders_mv TO default.orders AS 
-SELECT after.id, after.first_name, after.last_name, after.email, after.gender, 
-            after.street, after.town, after.mobile, after.country, after.drink_type, 
-            after.cost, after.addons, after.comments
+SELECT id, first_name, last_name, email, gender, 
+            street, town,  mobile, country, drink_type, 
+            toFloat64OrZero(cost) as cost, addons, comments
 FROM `service_cloud-expo-service-kafka`.orders_queue;
