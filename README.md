@@ -71,7 +71,7 @@ psql:sql/create.sql:1: NOTICE:  table "orders" does not exist, skipping
 DROP TABLE
 CREATE TABLE
 
-$> psql <SERVICE_URI_FROM_CONSOLE> -f sql/insert.sql
+$> psql <'SERVICE_URI_FROM_CONSOLE'> -f sql/insert.sql
 ```
 
 Excellent, we know have our postgres database loaded with data. 
