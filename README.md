@@ -45,7 +45,7 @@ You will need to install the aiven-extras extenstion and create a publication fo
 
 First, connect to your postgres service
 ```console
-$ psql <YOUR SERVICE URI>
+$ psql <'YOUR SERVICE URI'>
 ```
 
 > Be sure to remove the ?sslmode parameter when using the psql from local machine
@@ -66,7 +66,7 @@ FROM aiven_extras.pg_create_publication_for_all_tables(
 Now, let's load some data 
 
 ```console
-$> psql <SERVICE_URI_FROM_CONSOLE> -f sql/create.sql
+$> psql <'SERVICE_URI_FROM_CONSOLE'> -f sql/create.sql
 psql:sql/create.sql:1: NOTICE:  table "orders" does not exist, skipping
 DROP TABLE
 CREATE TABLE
