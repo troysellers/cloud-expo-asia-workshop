@@ -127,7 +127,10 @@ Click `New Connection` button and then add the following connection JSON.
     "database.server.name": "$PROJECT_NAME$PG_SERVICE_NAME",
     "tasks.max":"1",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter"
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "transforms": "flatten",
+    "transforms.flatten.type": "org.apache.kafka.connect.transforms.Flatten$Value",
+    "transforms.flatten.delimiter": "."
 }
 ```
 Modify the JSON file with connection information from your `PostgreSQL service`. You can get your connection information by going to your PostgreSQL service overview tab.
@@ -173,33 +176,39 @@ Firstly, lets make sure we know the name of the topic that has been created in K
 
 ```console
 $> avn service integration-list cloud-expo-clickhouse
+SERVICE_INTEGRATION_ID                SOURCE                    DEST                      INTEGRATION_TYPE       ENABLED  ACTIVE  DESCRIPTION                                                                     
+====================================  ========================  ========================  =====================  =======  ======  ================================================================================
+(integration not enabled)             cloud-expo-clickhouse     cloud-expo-service-kafka  kafka_logs             false    false   Send service logs to Aiven Apache Kafka service or external Apache Kafka cluster
+00b2961a-ae30-47c5-bc58-782ef67e0792  cloud-expo-service-kafka  cloud-expo-clickhouse     clickhouse_kafka       true     true    Access a Kafka cluster from ClickHouse
+(integration not enabled)             cloud-expo-service-pg     cloud-expo-clickhouse     clickhouse_postgresql  false    false   Access a PostgreSQL database from ClickHouse
 ```
 
 Now we can take that integration id and insert into this command. 
+Be sure to update the `topics` element and the end of this command with the topic from your service if you have modified any of the default settings.
 
 ```console
-avn service integration-update <SERVICE_INTEGRATION_ID> \
-    --project <YOUR PROJECT NAME> \
+avn service integration-update 00b2961a-ae30-47c5-bc58-782ef67e0792 \
+    --project tsellers-demo \
     --user-config-json '{
     "tables": [
         {
             "name": "orders_queue",
             "columns": [
-                {"name": "id" , "type": "String"},
-                {"name": "first_name" , "type": "String"},
-                {"name": "last_name" , "type": "String"},
-                {"name": "email" , "type": "String"},
-                {"name": "gender" , "type": "String"},
-                {"name": "street" , "type": "String"},
-                {"name": "town" , "type": "String"},
-                {"name": "mobile" , "type": "String"},
-                {"name": "country" , "type": "String"},
-                {"name": "drink_type" , "type": "String"},
-                {"name": "cost" , "type": "Float32"},
-                {"name": "addons" , "type": "String"},
-                {"name": "comments" , "type": "String"}
+                {"name": "after.id" , "type": "String"},
+                {"name": "after.first_name" , "type": "String"},
+                {"name": "after.last_name" , "type": "String"},
+                {"name": "after.email" , "type": "String"},
+                {"name": "after.gender" , "type": "String"},
+                {"name": "after.street" , "type": "String"},
+                {"name": "after.town" , "type": "String"},
+                {"name": "after.mobile" , "type": "String"},
+                {"name": "after.country" , "type": "String"},
+                {"name": "after.drink_type" , "type": "String"},
+                {"name": "after.cost" , "type": "Float64"},
+                {"name": "after.addons" , "type": "String"},
+                {"name": "after.comments" , "type": "String"}
             ],
-            "topics": [{"name": "<YOUR KAFKA TOPIC>"}],
+            "topics": [{"name": "cloud-expo-service-pg.public.orders"}],
             "data_format": "JSONEachRow",
             "group_name": " order_consumer"
         }
@@ -207,6 +216,36 @@ avn service integration-update <SERVICE_INTEGRATION_ID> \
 }'
 ```
 
+Now we can create the Clickhouse tables, the scripts for this are in the `sql/ch-create.sql` file 
+
+Open the Clickhouse service in the Aiven Console and look for the query editor. 
+
+Create the Table
+```sql
+CREATE TABLE default.orders
+(
+    id String,
+    first_name String,
+    last_name String,
+    email String,
+    gender String,
+    street String,
+    town String,
+    mobile String,
+    country String,
+    drink_type String,
+    cost Float32,
+    addons String,
+    comments String
+) ENGINE = MergeTree ORDER BY (id);
+```
+
+Create the Materialised View
+```sql
+CREATE MATERIALIZED VIEW default.orders_mv TO default.orders AS 
+SELECT *
+FROM `service_cloud-expo-service-kafka`.orders_queue;
+```
 
 # Bonus Marks!! 
 Did you make it to the end already? Still have time left in our workshop? Well done, I told you Aiven was simple and easy to use didn't I! :) 

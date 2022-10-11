@@ -1,4 +1,31 @@
 
+data "aiven_service_component" "schema_registry" {
+  project = var.aiven_project_name
+  service_name = aiven_kafka.kafka-service.service_name
+  component = "schema_registry"
+  route = "dynamic"
+}
+
+data "aiven_project" "demo-project" {
+  project = var.aiven_project_name
+}
+
+data "aiven_kafka_user" "kafka_admin" {
+  project = var.aiven_project_name
+  service_name = aiven_kafka.kafka-service.service_name
+
+  # default admin user that is automatically created each Aiven service
+  username = "avnadmin"
+
+  depends_on = [
+    aiven_kafka.kafka-service
+  ]
+}
+
+locals {
+  schema_registry_url = "https://${data.aiven_service_component.schema_registry.host}:${data.aiven_service_component.schema_registry.port}"
+}
+
 # PostgreSQL Service
 resource "aiven_pg" "postgres-service" {
 
@@ -87,11 +114,14 @@ resource "aiven_kafka_connector" "kafka-pg-source-conn" {
     "publication.name"         = "debezium_publication"
     "slot.name"                = "debezium",
     "key.converter"            = "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter"          = "org.apache.kafka.connect.json.JsonConverter"
+    "value.converter"          = "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable"  = "false",
+    "value.converter.schemas.enable" = "false",
+    "transforms"               = "flatten",
+    "transforms.flatten.type"  = "org.apache.kafka.connect.transforms.Flatten$Value",
+    "transforms.flatten.delimiter" = "."
   }
 }
-
-
 
 # M3 Service
 resource "aiven_m3db" "m3db-metrics" {
