@@ -8,6 +8,7 @@ Basically, everything here except for the web application is going to be built t
 * The [Aiven CLI](https://docs.aiven.io/docs/tools/cli.html) installed
 * A text editor of your choice
 * This github repository cloned 
+* psql commandline (or maybe something like [pgadmin](https://www.pgadmin.org/download/) installed)
 * A curious mind.. 
 
 > Install the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).
