@@ -12,6 +12,8 @@ Basically, everything here except for the web application is going to be built t
 
 > the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).
 
+And this is what we are going to build... 
+
 ![workshop](img/3-workshop.png)
 
 Sounds too good to be true? 
