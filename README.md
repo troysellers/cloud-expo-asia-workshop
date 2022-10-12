@@ -3,6 +3,15 @@
 In this 45 minute workshop you will create a complete, end to end, CDC pipeline for capturing and analysing data changes in a postgres database.
 Basically, everything here except for the web application is going to be built today.  
 
+## Pre-requisites 
+* An [Aiven Account](#create-your-aiven-account) 
+* The [Aiven CLI](https://docs.aiven.io/docs/tools/cli.html) installed
+* A text editor of your choice
+* This github repository cloned 
+* A curious mind.. 
+
+> the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).
+
 ![workshop](img/3-workshop.png)
 
 Sounds too good to be true? 
@@ -113,10 +122,12 @@ https://user-images.githubusercontent.com/92002375/193753962-7124b560-8cf6-4173-
 Go to Kafka service overview page > `manage integrations` > `Kafka connect`
 
 Once your Kafka Connect service has completed building you then can create the Debezium - PostgreSQL Source connection. 
-Click `New Connection` button and then add the following connection JSON. 
+For this you will need to use the AVN CLI 
 
-```json
-{
+> the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).  This configuration is also possible using the Console UI
+
+```console
+> avn service connector create <YOUR KAFKA CONNECT SERVICE NAME> '{
     "name": "kafka-pg-source-conn",
     "transforms": "extractState",
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
@@ -138,7 +149,7 @@ Click `New Connection` button and then add the following connection JSON.
     "key.converter.schemas.enable": "false",
     "value.converter.schemas.enable": "false",
     "transforms.extractState.type": "io.debezium.transforms.ExtractNewRecordState"
-}
+}'
 ```
 Modify the JSON file with connection information from your `PostgreSQL service`. You can get your connection information by going to your PostgreSQL service overview tab.
 
