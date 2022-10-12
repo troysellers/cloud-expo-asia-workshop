@@ -9,7 +9,11 @@ Sounds too good to be true?
 Welcome to Aiven :) 
 
 ## Create your Aiven Account
-If you haven't already done this, create a new Aiven trial at the [signup page](https://console.aiven.io/signup). You may notice some QR codes nearby, you could scan these and get to a trial with even a few more credits! 
+If you haven't already done this, create a new Aiven trial at the [signup page](https://console.aiven.io/signup). 
+
+Scan this QR Code to get extra credit! 
+
+![Extra Credit](img/credit-code.png)
 
 
 ![Signup](img/1%20-%20signup.png)
