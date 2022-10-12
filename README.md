@@ -10,7 +10,7 @@ Basically, everything here except for the web application is going to be built t
 * This github repository cloned 
 * A curious mind.. 
 
-> the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).
+> Install the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).
 
 And this is what we are going to build... 
 
@@ -126,7 +126,7 @@ Go to Kafka service overview page > `manage integrations` > `Kafka connect`
 Once your Kafka Connect service has completed building you then can create the Debezium - PostgreSQL Source connection. 
 For this you will need to use the AVN CLI 
 
-> the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).  This configuration is also possible using the Console UI
+> Install the AVN CLI from the instructions [here](https://docs.aiven.io/docs/tools/cli.html).  This configuration is also possible using the Console UI
 
 ```console
 > avn service connector create <YOUR KAFKA CONNECT SERVICE NAME> '{
